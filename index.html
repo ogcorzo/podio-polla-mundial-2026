@@ -1,0 +1,194 @@
+<!doctype html>
+<html class="h-full">
+ <head><script src="/_sdk/telemetry_sdk.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Podio Quiniela Mundial 2026</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Outfit:wght@300;400;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Outfit', sans-serif; }
+    .title-font { font-family: 'Bebas Neue', sans-serif; }
+    
+    @keyframes trophy-bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+    .animate-trophy { animation: trophy-bounce 2s ease-in-out infinite; }
+    .animate-fade-up { animation: fade-up 0.6s ease-out forwards; }
+    .delay-1 { animation-delay: 0.2s; opacity: 0; }
+    .delay-2 { animation-delay: 0.4s; opacity: 0; }
+    .delay-3 { animation-delay: 0.6s; opacity: 0; }
+    .gold-shimmer {
+      background: linear-gradient(90deg, #d4a017, #f5d442, #d4a017);
+      background-size: 200% auto;
+      animation: shimmer 3s linear infinite;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .podium-1 { background: linear-gradient(180deg, #f5d442 0%, #b8860b 100%); }
+    .podium-2 { background: linear-gradient(180deg, #c0c0c0 0%, #808080 100%); }
+    .podium-3 { background: linear-gradient(180deg, #cd7f32 0%, #8b4513 100%); }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  
+ </head>
+ <body class="h-full">
+  <div id="app" class="h-full w-full overflow-auto" style="background: linear-gradient(135deg, #ff3131 0%, #004aad 50%, #7ed957 100%);"><!-- Header -->
+   <div class="text-center pt-8 pb-4 animate-fade-up">
+    <div class="inline-block mb-2"><span class="text-5xl">⚽</span>
+    </div>
+    <h1 id="main-title" class="title-font text-5xl md:text-7xl gold-shimmer tracking-wider">Polla Mundial 2026</h1>
+    <p id="subtitle" class="text-gray-300 text-lg mt-2 font-light">Top 3 - Clasificación</p>
+    <div class="flex justify-center gap-4 mt-4 text-5xl md:text-7xl font-bold text-white"><span>🇺🇸</span> <span>🇲🇽</span> <span>🇨🇦</span>
+    </div>
+   </div><!-- Podium Section -->
+   <div class="flex items-end justify-center gap-3 md:gap-6 px-4 pt-8 pb-4 max-w-3xl mx-auto" style="min-height: 340px;"><!-- 2nd Place -->
+    <div class="flex flex-col items-center animate-fade-up delay-2 flex-1 max-w-[180px]">
+     <div class="text-4xl mb-2">
+      🥈
+     </div>
+     <p id="name-2" class="text-white font-semibold text-center text-sm md:text-base truncate w-full">---</p>
+     <p id="points-2" class="text-gray-300 text-xs md:text-sm mb-2"><span class="pts-val">0</span> pts</p>
+     <div class="podium-2 w-full rounded-t-lg flex items-center justify-center" style="height: 140px;"><span class="title-font text-4xl text-white/80">2</span>
+     </div>
+    </div><!-- 1st Place -->
+    <div class="flex flex-col items-center animate-fade-up delay-1 flex-1 max-w-[200px]">
+     <div class="text-5xl mb-2 animate-trophy">
+      🏆
+     </div>
+     <p id="name-1" class="text-white font-bold text-center text-base md:text-lg truncate w-full">---</p>
+     <p id="points-1" class="text-yellow-300 text-xs md:text-sm mb-2 font-semibold"><span class="pts-val">0</span> pts</p>
+     <div class="podium-1 w-full rounded-t-lg flex items-center justify-center" style="height: 190px;"><span class="title-font text-5xl text-white/80">1</span>
+     </div>
+    </div><!-- 3rd Place -->
+    <div class="flex flex-col items-center animate-fade-up delay-3 flex-1 max-w-[180px]">
+     <div class="text-4xl mb-2">
+      🥉
+     </div>
+     <p id="name-3" class="text-white font-semibold text-center text-sm md:text-base truncate w-full">---</p>
+     <p id="points-3" class="text-gray-300 text-xs md:text-sm mb-2"><span class="pts-val">0</span> pts</p>
+     <div class="podium-3 w-full rounded-t-lg flex items-center justify-center" style="height: 100px;"><span class="title-font text-4xl text-white/80">3</span>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
+  const defaultConfig = {
+    main_title: 'QUINIELA MUNDIAL 2026',
+    subtitle: 'Top 3 - Clasificación',
+    background_color: '#1a0a2e',
+    surface_color: '#ffffff1a',
+    text_color: '#ffffff',
+    primary_action_color: '#f5d442',
+    secondary_action_color: '#cd7f32',
+    font_family: 'Outfit',
+    font_size: 16
+  };
+
+  let podiumData = [];
+
+  const SHEET_URL =
+    'https://docs.google.com/spreadsheets/d/e/2PACX-1vRkh9KqMCqioJMbwbqvNdUwlFbZQe786IhUxG2Rvr1b8NWZFMZbbFsFXuX0u9PNQnBL-icpTglk4-K2/pub?gid=1856763879&single=true&output=csv';
+
+  function csvToArray(csv) {
+    const lines = csv.trim().split('\n');
+
+    const headers = lines[0]
+      .split(',')
+      .map(h => h.trim().replace(/"/g, ''));
+
+    return lines.slice(1).map(line => {
+      const values = line
+        .split(',')
+        .map(v => v.trim().replace(/"/g, ''));
+
+      return headers.reduce((obj, header, index) => {
+        obj[header] = values[index];
+        return obj;
+      }, {});
+    });
+  }
+
+  async function loadPodiumData() {
+    try {
+
+      const response = await fetch(SHEET_URL);
+
+      const csv = await response.text();
+
+      const data = csvToArray(csv);
+
+      podiumData = data.map(row => ({
+        position: Number(row.position),
+        name: row.name,
+        points: Number(row.points)
+      }));
+
+      renderPodium(podiumData);
+
+    } catch (error) {
+      console.error('Error cargando Google Sheets:', error);
+    }
+  }
+
+  // carga inicial
+  loadPodiumData();
+
+  // refresco automático cada 30 segundos
+  setInterval(loadPodiumData, 30000);
+
+  function renderPodium(data) {
+    for (let i = 1; i <= 3; i++) {
+      const entry = data.find(d => d.position === i);
+      const nameEl = document.getElementById(`name-${i}`);
+      const pointsEl = document.getElementById(`points-${i}`);
+      nameEl.textContent = entry ? entry.name : '---';
+      pointsEl.innerHTML = `<span class="pts-val">${entry ? entry.points : 0}</span> pts`;
+    }
+  }
+
+  // Element SDK
+  window.elementSdk.init({
+    defaultConfig,
+    onConfigChange: async (config) => {
+      const font = config.font_family || defaultConfig.font_family;
+      const size = config.font_size || defaultConfig.font_size;
+      document.getElementById('main-title').textContent = config.main_title || defaultConfig.main_title;
+      document.getElementById('subtitle').textContent = config.subtitle || defaultConfig.subtitle;
+      document.getElementById('main-title').style.fontFamily = `'Bebas Neue', ${font}, sans-serif`;
+      document.getElementById('subtitle').style.fontFamily = `${font}, sans-serif`;
+      document.getElementById('subtitle').style.fontSize = `${size}px`;
+      document.getElementById('app').style.background = `linear-gradient(135deg, #ff3131 0%, #7ed957 50%, #004aad 100%)`;
+    },
+    mapToCapabilities: (config) => ({
+      recolorables: [
+        { get: () => config.background_color || defaultConfig.background_color, set: (v) => { config.background_color = v; window.elementSdk.setConfig({ background_color: v }); } },
+        { get: () => config.text_color || defaultConfig.text_color, set: (v) => { config.text_color = v; window.elementSdk.setConfig({ text_color: v }); } },
+        { get: () => config.primary_action_color || defaultConfig.primary_action_color, set: (v) => { config.primary_action_color = v; window.elementSdk.setConfig({ primary_action_color: v }); } }
+      ],
+      borderables: [],
+      fontEditable: { get: () => config.font_family || defaultConfig.font_family, set: (v) => { config.font_family = v; window.elementSdk.setConfig({ font_family: v }); } },
+      fontSizeable: { get: () => config.font_size || defaultConfig.font_size, set: (v) => { config.font_size = v; window.elementSdk.setConfig({ font_size: v }); } }
+    }),
+    mapToEditPanelValues: (config) => new Map([
+      ['main_title', config.main_title || defaultConfig.main_title],
+      ['subtitle', config.subtitle || defaultConfig.subtitle]
+    ])
+  });
+
+  lucide.createIcons();
+</script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0b99f05a7353bf3',t:'MTc4MTQ0MzEwOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
